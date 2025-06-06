@@ -9,40 +9,70 @@ use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        $data = Tag::all();
+        $data = Tag::paginate(5);
+        $data ?? [];
         return view('tag.index', ['tags' => $data, 'pageTitle' => 'Tags']);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        Tag::create([
-            'title' => 'CSS',
-        ]);
-        return redirect('/tag');
+        return view('tag.create', ['pageTitle' => 'Create Tag']);
     }
 
-    public function delete($id)
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
     {
-        Tag::destroy($id);
-        return redirect('/tag');
+        // @todo: this will be completed in the forms section
     }
 
-    // public function testManyToMany()
-    // {
-    //     $post15 = Post::find(15);
-    //     $post16 = Post::find(16);
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $tag = Tag::findOrFail($id);
+        return view('tag.show', ['tag' => $tag, 'pageTitle' => $tag->name]);
+    }
 
-    //     $post15->tags()->attach([1, 8]); // Attach tags with IDs 1 and 8 to post id 15
-    //     $post16->tags()->attach(1); // Attach tag with ID 1 to post id 16
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $tag = Tag::findOrFail($id);
+        return view('tag.edit', ['tag' => $tag, 'pageTitle' => 'Edit Tag']);
+    }
 
-    //     return response()->json([
-    //         'message' => 'Tags attached successfully',
-    //         'post15_tags' => $post15->tags,
-    //         'post16_tags' => $post16->tags,
-    //     ]);
-    // }
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        // @todo: this will be completed in the forms section
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        // @todo: this will be completed in the forms section
+    }
+
+    public function factoryCreate(){
+        Tag::factory(5)->create();
+        return redirect('/tag');
+    }
 
     public function testManyToMany()
     {
@@ -53,20 +83,5 @@ class TagController extends Controller
         $post->tags()->attach([$tag->id]); // Attach tags with IDs 1 and 8 to post id 15
 
         return redirect('/blog/' . $post->id);
-    }
-
-    public function factoryCreate()
-    {
-        // Tag::factory(5)->create();
-        
-        $tags = ['HTML', 'CSS', 'JS', 'PHP'];
-
-        foreach ($tags as $title) {
-            Tag::factory()->create([
-                'title' => $title,
-            ]);
-        }
-
-        return redirect('/tag');
     }
 }

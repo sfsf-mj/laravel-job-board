@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class IndexController extends Controller
+class AboutController extends Controller
 {
     /**
      * Handle the incoming request.
      */
     public function __invoke(Request $request)
     {
-        return view('index',['pageTitle'=> 'index']);
+        return view('about',['pageTitle'=> 'about']);
     }
 }

@@ -3,23 +3,25 @@
     <section class="text-gray-600 body-font">
         <div class="container px-5 py-24 mx-auto">
             <div class="flex flex-wrap -m-4">
-                <form action="/api/tag/create" method="POST" class="mb-4">
-                    @csrf
-                    <input type="text" name="title" placeholder="Tag Title"
-                        class="border border-gray-300 rounded-md p-2 w-full mb-2" required>
-                    <button type="submit"
-                        class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-200 disabled:opacity-25 transition ease-in-out duration-150">
-                        Create Tag
-                    </button>
-                </form>
-                @foreach ($tags as $tag)
+                @foreach ($comments as $comment)
                     <div class="xl:w-1/3 md:w-1/2 p-4">
 
                         <div class="border border-gray-200 p-6 rounded-lg">
-                            <a href="/blog/{{ $tag->id }}">
-                                <h2 class="text-lg text-gray-900 font-medium title-font mb-2">{{ $tag->title }}</h2>
+                            <a href="/comment/{{ $comment->id }}">
+                                <h2 class="text-lg text-gray-900 font-medium title-font mb-2">
+                                    Author:
+                                    <span class="text-gray-500">{{ $comment->author }}</span>
+                                </h2>
+                                <h2 class="text-lg text-gray-900 font-medium title-font mb-2">
+                                    Content:
+                                    <span class="text-gray-500">{{ $comment->content }}</span>
+                                </h2>
+                                <h2 class="text-lg text-gray-900 font-medium title-font mb-2">
+                                    Post id:
+                                    <span class="text-gray-500">{{ $comment->post_id }}</span>
+                                </h2>
                             </a>
-                            <form action="/api/tag/delete/{{ $tag->id }}" method="post" class="mb-4">
+                            <form action="/api/comment/delete/{{ $comment->id }}" method="post" class="mb-4">
                                 @csrf
                                 @method('DELETE') {{-- أضف هذا السطر --}}
                                 <button type="submit" class="text-red-500 hover:text-red-700">
@@ -42,9 +44,8 @@
                 @endforeach
 
                 <br>
-                {{ $tags->links()}}
+                {{ $comments->links()}}
             </div>
         </div>
     </section>
-
 </x-layout>
