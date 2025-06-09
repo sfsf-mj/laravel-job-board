@@ -1,3 +1,16 @@
+{{--
+
+    This component is used to create a layout for the job board application.
+    It includes a navigation bar, a header, and a main content area.
+    To use it, simply include the component in your Blade view like this:
+        <x-layout :title="$pageTitle">
+            <!-- Your content here -->
+        </x-layout>
+    The `title` prop is optional and will be displayed in the header if provided.
+    
+--}}
+
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-gray-100">
 
@@ -7,13 +20,13 @@
     <title>Job board {{ $title ? '| ' . $title : '' }}</title>
     <link href="https://fonts.bunny.net" rel="preconnect">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 
 <body class="h-full">
     <div class="min-h-full">
-        <nav class="bg-gray-800"  x-data="{ open_mobile_menu: false }">
+        <nav class="bg-gray-800" x-data="{ open_mobile_menu: false }">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
                     <div class="flex items-center">
@@ -27,6 +40,7 @@
                                 <x-nav-link href="/" :active="request()->is('/')">Dashboard</x-nav-link>
                                 <x-nav-link href="/about" :active="request()->is('about')">Adout</x-nav-link>
                                 <x-nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav-link>
+                                <x-nav-link href="/blog" :active="request()->is('blog')">Blog</x-nav-link>
                             </div>
                         </div>
                     </div>
@@ -81,7 +95,8 @@
 
                     <div class="-mr-2 flex md:hidden">
                         <!-- Mobile menu button -->
-                        <button type="button" @click="open_mobile_menu = !open_mobile_menu" :aria-expanded="open_mobile_menu"
+                        <button type="button" @click="open_mobile_menu = !open_mobile_menu"
+                            :aria-expanded="open_mobile_menu"
                             class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
                             aria-controls="mobile-menu">
                             <span class="absolute -inset-0.5"></span>
@@ -116,6 +131,8 @@
                         class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('about') ? $Current : $Default }}">About</a>
                     <a href="/contact"
                         class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('contact') ? $Current : $Default }}">Content</a>
+                    <a href="/blog"
+                        class="block rounded-md px-3 py-2 text-base font-medium {{ request()->is('blog') ? $Current : $Default }}">Blog</a>
                 </div>
                 <div class="border-t border-gray-700 pt-4 pb-3">
                     <div class="flex items-center px-5">
@@ -161,6 +178,11 @@
             </header>
         @endif
 
+
+        {{-- Notification component --}}
+        <x-notification />
+
+        {{-- Main content --}}
         <main>
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                 {{ $slot }}
@@ -168,6 +190,7 @@
         </main>
     </div>
 
+    <x-confirm-dialog />
 </body>
 
 </html>

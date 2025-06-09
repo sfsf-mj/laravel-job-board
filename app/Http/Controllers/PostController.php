@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BlogPostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $data = Post::paginate(5);
+        $data = Post::latest()->paginate(3);
         $data ?? [];
         return view('post.index', ['posts' => $data, 'pageTitle' => 'Blog Posts']);
     }
@@ -29,9 +30,21 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BlogPostRequest $request)
     {
-        // @todo: this will be completed in the forms section
+        $post = new Post();
+
+        $post->title = $request->input('title');
+        $post->body = $request->input('body');
+        $post->author = $request->input('author');
+        $post->published = $request->boolean('published');
+
+        $post->save();
+
+        return redirect('/blog')->with('notification', [
+            'type' => 'success',
+            'message' => 'Post created successfully!'
+        ]);
     }
 
     /**
@@ -39,7 +52,13 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::find($id);
+        if (!$post) {
+            return redirect('/blog')->with('notification', [
+                'type' => 'error',
+                'message' => 'Post not found!'
+            ]);
+        }
         return view('post.show', ['post' => $post, 'pageTitle' => $post->title]);
     }
 
@@ -48,15 +67,34 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        return view('post.edit', ['pageTitle' => 'Edit Post']);
+        $post = Post::find($id);
+        if (!$post) {
+            return redirect('/blog')->with('notification', [
+                'type' => 'error',
+                'message' => 'Post not found!'
+            ]);
+        }
+        return view('post.edit', ['pageTitle' => 'Edit Post', 'post' => $post]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(BlogPostRequest $request, string $id)
     {
-        // @todo: this will be completed in the forms section
+        $post = Post::findOrFail($id);
+
+        $post->title = $request->input('title');
+        $post->body = $request->input('body');
+        $post->author = $request->input('author');
+        $post->published = $request->boolean('published');
+
+        $post->save();
+
+        return redirect("/blog/{$id}")->with('notification', [
+            'type' => 'success',
+            'message' => 'Post update successfully!'
+        ]);
     }
 
     /**
@@ -64,10 +102,16 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        // @todo: this will be completed in the forms section
+        $post = Post::findOrFail($id);
+        $post->delete();
+        return redirect('/blog')->with('notification', [
+            'type' => 'success',
+            'message' => 'Post delete successfully!'
+        ]);
     }
 
-    public function factoryCreate(){
+    public function factoryCreate()
+    {
         Post::factory()->count(500)->create();
         return redirect('/blog');
     }

@@ -1,3 +1,14 @@
+{{--
+
+    This component is used to create links in a navigation menu with active state styling.
+    To use it, simply include the component in your Blade view like this:
+        <x-nav-link href="/your_route" :active="request()->is('/your_route')">Link Text</x-nav-link>
+    The `active` prop determines if the link should have the active styling.
+    The component will automatically apply the correct classes based on the active state.
+    
+--}}
+
+
 @props([ 'active' => false ])
 
 @php
