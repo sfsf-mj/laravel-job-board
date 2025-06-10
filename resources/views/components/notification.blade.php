@@ -125,8 +125,8 @@
                 notification.classList.add('opacity-0', 'scale-90');
                 setTimeout(() => {
                     notification.remove();
-                }, 500);
-            }, 5000);
+                }, 1000);
+            }, 10000);
         }
     });
 </script>
